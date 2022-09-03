@@ -31,4 +31,4 @@ jobs:
           poetry run black .
       - name: Linting with mypy
         run: |
-        poetry run mypy .
+          poetry run mypy .
