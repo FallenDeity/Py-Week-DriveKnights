@@ -24,7 +24,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.black]
 line-length = 129
 target-version = ['py310']
-force-exclude = ["^.", "LICENSE", "poetry.lock", "pyproject.toml", "README.md", ".pre-commit-config.yaml", ".gitignore", ".git"]
+force-exclude = ["^.", "LICENSE", "poetry.lock", "pyproject.toml", "README.md"]
 
 
 [tool.isort]
@@ -55,4 +55,4 @@ show_column_numbers = true
 show_error_codes = true
 pretty = true
 install_types = true
-exclude = ["^.", "LICENSE", "poetry.lock", "pyproject.toml", "README.md"]
+mypy_path = "src"
