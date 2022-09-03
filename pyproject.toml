@@ -24,7 +24,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.black]
 line-length = 129
 target-version = ['py310']
-force-exclude = ["^.", "LICENSE", "poetry.lock", "pyproject.toml", "README.md"]
 
 
 [tool.isort]
