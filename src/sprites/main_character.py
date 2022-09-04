@@ -1,11 +1,22 @@
 import pygame
+from typing import Callable, Union
+from functools import wraps
 
 
 class MainCharacter(pygame.sprite.Sprite):
 
     ANIMATION_COOLDOWN: int = 50
 
-    def __init__(self, animations: dict[str, list[pygame.surface.Surface]]) -> None:
+    @staticmethod
+    def wrapper(func: Callable[..., None]) -> Callable[..., None]:
+        @wraps(func)
+        def inner(cls: "MainCharacter", *args: Union[str, int], **kwargs: Union[str, int]) -> None:
+            func(cls, *args, **kwargs)
+            cls.animate()
+
+        return inner
+
+    def __init__(self, animations: dict[str, list[pygame.surface.Surface]], size: tuple[int, int]) -> None:
         super().__init__()
         self.animations = animations
         self.image = self.animations["up"][0]
@@ -18,12 +29,14 @@ class MainCharacter(pygame.sprite.Sprite):
         self.is_jumping = False
         self.is_falling = False
         self.jump_velocity = 10
+        self.jump_time = 1
         self.gravity = 0.5
         self.max_fall_velocity = 10
         self.frame_index = 0
         self.action = 0
         self.update_time = pygame.time.get_ticks()
         self.flip = False
+        self.screen = size
 
     # Animate the character
     def animate(self) -> None:
@@ -39,19 +52,24 @@ class MainCharacter(pygame.sprite.Sprite):
         self.image = self.animations[self.direction][self.frame_index]
 
     # Move the character
-    def move(self, direction: str, velocity: int = None) -> None:
+    @wrapper
+    def animate_move(self, direction: str, velocity: int = None) -> None:
         speed = velocity or self.velocity
-        self.is_moving = True
         self.direction = direction
+        self.is_moving = True
         match self.direction:
             case "up":
-                self.rect.y -= speed
+                if self.rect.y - speed > 0:
+                    self.rect.y -= speed
             case "down":
-                self.rect.y += speed
+                if self.rect.y + speed < self.screen[1] - self.rect.height:
+                    self.rect.y += speed
             case "left":
-                self.rect.x -= speed
+                if self.rect.x - speed > 0:
+                    self.rect.x -= speed
             case "right":
-                self.rect.x += speed
+                if self.rect.x + speed < self.screen[0] - self.rect.width:
+                    self.rect.x += speed
             case _:
                 ...
-        self.animate()
+        self.is_moving = False

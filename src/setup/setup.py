@@ -23,6 +23,6 @@ class Setup:
                     ANIMATIONS[i].append(img)
         return ANIMATIONS
 
-    def __init__(self) -> None:
+    def __init__(self, screen: tuple[int, int]) -> None:
         self.get_mc_frames()
-        self.mc = MainCharacter(ANIMATIONS)
+        self.mc = MainCharacter(ANIMATIONS, screen)

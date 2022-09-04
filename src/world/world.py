@@ -4,7 +4,6 @@ from src.setup import Setup
 
 
 class World:
-
     @staticmethod
     def get_screen_res() -> tuple[int, int]:
         """Function to get the user's screen resolution"""
@@ -14,23 +13,25 @@ class World:
     def __init__(self) -> None:
         pygame.init()
         self.screen = self.get_screen_res()
-        self.surface = pygame.display.set_mode((*self.screen,))
+        self.surface = pygame.display.set_mode((*self.screen,), pygame.FULLSCREEN)
         pygame.display.set_caption("DriveKnights")
         self.clock = pygame.time.Clock()
         self.running = True
         self.fps = 60
-        self.setup = Setup()
+        self.setup = Setup(self.screen)
 
     def continue_running(self) -> None:
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
-            self.setup.mc.move("up", 5)
+            self.setup.mc.animate_move("up", 5)
         elif keys[pygame.K_DOWN]:
-            self.setup.mc.move("down", 5)
+            self.setup.mc.animate_move("down", 5)
         elif keys[pygame.K_LEFT]:
-            self.setup.mc.move("left", 5)
+            self.setup.mc.animate_move("left", 5)
         elif keys[pygame.K_RIGHT]:
-            self.setup.mc.move("right", 5)
+            self.setup.mc.animate_move("right", 5)
+        else:
+            ...
 
     def events(self) -> None:
         for event in pygame.event.get():
@@ -46,13 +47,15 @@ class World:
                             pygame.quit()
                             sys.exit()
                         case pygame.K_UP:
-                            self.setup.mc.move("up")
+                            self.setup.mc.animate_move("up")
                         case pygame.K_DOWN:
-                            self.setup.mc.move("down")
+                            self.setup.mc.animate_move("down")
                         case pygame.K_LEFT:
-                            self.setup.mc.move("left")
+                            self.setup.mc.animate_move("left")
                         case pygame.K_RIGHT:
-                            self.setup.mc.move("right")
+                            self.setup.mc.animate_move("right")
+                        case pygame.K_SPACE:
+                            ...  # for jump
                         case _:
                             ...
                 case _:
