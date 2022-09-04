@@ -7,6 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+pygame = "^2.1.2"
 
 
 [tool.poetry.dev-dependencies]
@@ -43,8 +44,8 @@ disallow_untyped_defs = true
 disallow_incomplete_defs = true
 disallow_untyped_calls = true
 disallow_untyped_decorators = true
-no_implicit_optional = true
 strict_equality = true
+strict_optional = false
 warn_redundant_casts = true
 warn_unused_ignores = true
 warn_return_any = true
