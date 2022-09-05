@@ -1,9 +1,13 @@
 import pygame
 import sys
+from src.sprites import MapGenerator
 from src.setup import Setup
 
 
 class World:
+
+    map: MapGenerator
+
     @staticmethod
     def get_screen_res() -> tuple[int, int]:
         """Function to get the user's screen resolution"""
@@ -12,13 +16,14 @@ class World:
 
     def __init__(self) -> None:
         pygame.init()
-        self.screen = self.get_screen_res()
-        self.surface = pygame.display.set_mode((*self.screen,), pygame.FULLSCREEN)
+        self.screen = 1024, 768
+        self.surface = pygame.display.set_mode((*self.screen,))
         pygame.display.set_caption("DriveKnights")
         self.clock = pygame.time.Clock()
         self.running = True
         self.fps = 60
         self.setup = Setup(self.screen)
+        self.map = MapGenerator(self.surface, self.screen)
 
     def continue_running(self) -> None:
         keys = pygame.key.get_pressed()
@@ -64,6 +69,7 @@ class World:
 
     def update(self) -> None:
         self.surface.fill((255, 255, 255))
+        self.map.draw()
         self.surface.blit(self.setup.mc.image, self.setup.mc.rect)
         pygame.display.update()
 
