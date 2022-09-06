@@ -1,6 +1,7 @@
 import pygame
 from typing import Callable, Union
 from functools import wraps
+from .worldmap import MapGenerator
 
 
 class MainCharacter(pygame.sprite.Sprite):
@@ -16,14 +17,18 @@ class MainCharacter(pygame.sprite.Sprite):
 
         return inner
 
-    def __init__(self, animations: dict[str, list[pygame.surface.Surface]], size: tuple[int, int]) -> None:
+    def __init__(self, animations: dict[str, list[pygame.surface.Surface]], size: tuple[int, int], world: MapGenerator) -> None:
         super().__init__()
+        self.world = world
+        self.screen = size
         self.animations = animations
         self.image = self.animations["up"][0]
         self.rect = self.image.get_rect()
-        self.rect.x = 0
-        self.rect.y = 0
-        self.velocity = 3
+        self.rect.x = self.screen[0] // 2
+        self.rect.y = self.screen[1] // 2
+        self.world.pos_x = self.rect.x
+        self.world.pos_y = self.rect.y
+        self.velocity = 4
         self.direction = "up"
         self.is_moving = False
         self.is_jumping = False
@@ -36,7 +41,6 @@ class MainCharacter(pygame.sprite.Sprite):
         self.action = 0
         self.update_time = pygame.time.get_ticks()
         self.flip = False
-        self.screen = size
 
     # Animate the character
     def animate(self) -> None:
@@ -59,17 +63,17 @@ class MainCharacter(pygame.sprite.Sprite):
         self.is_moving = True
         match self.direction:
             case "up":
-                if self.rect.y - speed > 0:
-                    self.rect.y -= speed
+                if self.world.pos_y - speed > 0:
+                    self.world.pos_y -= speed
             case "down":
-                if self.rect.y + speed < self.screen[1] - self.rect.height:
-                    self.rect.y += speed
+                if self.world.pos_y + speed < self.world.size[1] - self.rect.height:
+                    self.world.pos_y += speed
             case "left":
-                if self.rect.x - speed > 0:
-                    self.rect.x -= speed
+                if self.world.pos_x - speed > 0:
+                    self.world.pos_x -= speed
             case "right":
-                if self.rect.x + speed < self.screen[0] - self.rect.width:
-                    self.rect.x += speed
+                if self.world.pos_x + speed < self.world.size[0] - self.rect.width:
+                    self.world.pos_x += speed
             case _:
                 ...
         self.is_moving = False

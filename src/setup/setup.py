@@ -1,5 +1,6 @@
 import os
 import pygame
+from src.sprites import MapGenerator
 from src.sprites import MainCharacter
 
 PATH: str = "src/assets/characters/mc/"
@@ -23,6 +24,6 @@ class Setup:
                     ANIMATIONS[i].append(img)
         return ANIMATIONS
 
-    def __init__(self, screen: tuple[int, int]) -> None:
+    def __init__(self, screen: tuple[int, int], world: MapGenerator) -> None:
         self.get_mc_frames()
-        self.mc = MainCharacter(ANIMATIONS, screen)
+        self.mc = MainCharacter(ANIMATIONS, screen, world)
