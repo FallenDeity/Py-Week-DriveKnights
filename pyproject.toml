@@ -9,6 +9,8 @@ readme = "README.md"
 python = "^3.10"
 pygame = "^2.1.2"
 numpy = "^1.23.2"
+matplotlib = "^3.5.3"
+perlin-noise = "^1.12"
 
 
 [tool.poetry.dev-dependencies]

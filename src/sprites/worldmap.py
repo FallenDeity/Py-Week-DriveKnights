@@ -1,7 +1,9 @@
 import os
-from random import randint
+import random
 
 import pygame
+import matplotlib.pyplot as plt
+from perlin_noise import PerlinNoise
 from pygame.locals import Rect
 import numpy as np
 
@@ -16,6 +18,7 @@ TILES = {
     "red soil": (192, 0),
     "barrel": (224, 0),
 }
+DEBUG: bool = True
 
 
 class MapGenerator:
@@ -32,21 +35,36 @@ class MapGenerator:
     pos_y: int
 
     def __init__(self, surface: pygame.surface.Surface) -> None:
-        self.size = 2496, 2496
+        self.size = 2048, 2048
         self.screen = surface
+        self.walls = [6]
         self.load_tileset(os.path.join("src/assets/maps", "tileset.bmp"))
-        self.reset()
-        self.randomize()
+        self.generate()
 
     def reset(self) -> None:
         self.tiles_x, self.tiles_y = self.size[0] // TILE_W, self.size[1] // TILE_H
         self.tiles = np.zeros((self.tiles_y, self.tiles_x), dtype=int)
         return None
 
-    def randomize(self) -> None:
+    # Generate map using perlin noise
+    def generate(self) -> None:
+        self.reset()
+        noise = PerlinNoise(octaves=6, seed=random.randint(0, 100))
         for y in range(self.tiles_y):
             for x in range(self.tiles_x):
-                self.tiles[y][x] = randint(0, len(TILES.keys()) - 1)
+                z = [x / self.tiles_x, y / self.tiles_y]
+                n = noise(z)
+                if n < 0.2:
+                    self.tiles[y][x] = 5
+                elif n < 0.4:
+                    self.tiles[y][x] = 6
+                elif n < 0.6:
+                    self.tiles[y][x] = 4
+                else:
+                    self.tiles[y][x] = 2
+        if DEBUG:
+            plt.imshow(self.tiles)
+            plt.show()
         return None
 
     def load_tileset(self, image: str = "tileset.bmp") -> None:
