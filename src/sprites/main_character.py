@@ -64,16 +64,16 @@ class MainCharacter(pygame.sprite.Sprite):
         match self.direction:
             case "up":
                 if self.world.pos_y - speed > 0:
-                    self.world.pos_y -= speed
+                    self.world.set_position(self.world.pos_x, self.world.pos_y - speed, self.direction)
             case "down":
                 if self.world.pos_y + speed < self.world.size[1] - self.rect.height:
-                    self.world.pos_y += speed
+                    self.world.set_position(self.world.pos_x, self.world.pos_y + speed, self.direction)
             case "left":
                 if self.world.pos_x - speed > 0:
-                    self.world.pos_x -= speed
+                    self.world.set_position(self.world.pos_x - speed, self.world.pos_y, self.direction)
             case "right":
                 if self.world.pos_x + speed < self.world.size[0] - self.rect.width:
-                    self.world.pos_x += speed
+                    self.world.set_position(self.world.pos_x + speed, self.world.pos_y, self.direction)
             case _:
                 ...
         self.is_moving = False

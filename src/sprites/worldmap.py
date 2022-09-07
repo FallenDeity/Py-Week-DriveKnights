@@ -42,7 +42,7 @@ class MapGenerator:
         for i in range(0, len(TILES)):
             TILES[keylist[i]] = self.TILE_W * i, 0
         print(TILES)
-        self.walls = [6]
+        self.walls = [i for i in range(10) if i != 6]
         self.load_tileset("src/assets/maps/tileset.bmp")
         self.generate()
 
@@ -81,9 +81,16 @@ class MapGenerator:
         self.rect = self.tileset.get_rect()
         return None
 
+    def set_position(self, x: int, y: int, direction: str) -> None:
+        pos = x, y
+        if self.get_tile_value(pos, direction) in self.walls:
+            pass
+        else:
+            self.pos_x, self.pos_y = pos
+
     # Draw map around player position
-    def draw(self, pos: tuple[int, int] = None) -> None:
-        position = pos or (self.pos_x, self.pos_y)
+    def draw(self) -> None:
+        position = self.pos_x, self.pos_y
         self.offset = position[0] - self.screen.get_width() // 2, position[1] - self.screen.get_height() // 2
         for y in range(self.tiles_y):
             for x in range(self.tiles_x):
@@ -95,3 +102,18 @@ class MapGenerator:
                     (x * self.TILE_W - self.offset[0], y * self.TILE_H - self.offset[1]),
                     Rect(coords[0], coords[1], self.TILE_W, self.TILE_H),
                 )
+
+    def get_tile_value(self, pos: tuple[int, int], direction: str) -> int:
+        position = pos
+        self.offset = position[0] - self.screen.get_width() // 2, position[1] - self.screen.get_height() // 2
+        x, y = self.pos_x // self.TILE_W, self.pos_y // self.TILE_H
+        if direction == "up":
+            y -= 1
+        elif direction == "down":
+            y += 1
+        elif direction == "left":
+            x -= 1
+        elif direction == "right":
+            x += 1
+        value: int = self.tiles[y][x]
+        return value
