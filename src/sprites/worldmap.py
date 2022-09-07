@@ -7,18 +7,18 @@ from perlin_noise import PerlinNoise
 from pygame.locals import Rect
 import numpy as np
 
-TILE_W, TILE_H = 32, 32
+TILE_W, TILE_H = 128, 128
 TILES = {
     "grass": (0, 0),
-    "darkgrass": (32, 0),
-    "dirt": (64, 0),
-    "road": (96, 0),
-    "rock": (128, 0),
-    "red soil top": (160, 0),
-    "red soil": (192, 0),
-    "barrel": (224, 0),
+    "darkgrass": (128, 0),
+    "dirt": (256, 0),
+    "road": (384, 0),
+    "rock": (512, 0),
+    "red soil top": (640, 0),
+    "red soil": (768, 0),
+    "barrel": (896, 0),
 }
-DEBUG: bool = True
+DEBUG: bool = False
 
 
 class MapGenerator:
@@ -37,8 +37,9 @@ class MapGenerator:
     def __init__(self, surface: pygame.surface.Surface) -> None:
         self.size = 2048, 2048
         self.screen = surface
+        print(self.screen)
         self.walls = [6]
-        self.load_tileset(os.path.join("src/assets/maps", "tileset.bmp"))
+        self.load_tileset(os.path.join("assets/maps", "tileset.bmp"))
         self.generate()
 
     def reset(self) -> None:
@@ -54,10 +55,13 @@ class MapGenerator:
             for x in range(self.tiles_x):
                 z = [x / self.tiles_x, y / self.tiles_y]
                 n = noise(z)
+                print(n)
                 if n < 0.2:
                     self.tiles[y][x] = 5
-                elif n < 0.4:
+                elif n < 0.3:
                     self.tiles[y][x] = 6
+                elif n < 0.4:
+                    self.tiles[y][x] = 7
                 elif n < 0.6:
                     self.tiles[y][x] = 4
                 else:
