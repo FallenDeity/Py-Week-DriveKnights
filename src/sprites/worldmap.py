@@ -18,7 +18,7 @@ TILES = {
     "red soil": (192, 0),
     "barrel": (224, 0),
 }
-DEBUG: bool = True
+DEBUG: bool = False
 
 
 class MapGenerator:
@@ -35,10 +35,17 @@ class MapGenerator:
     pos_y: int
 
     def __init__(self, surface: pygame.surface.Surface) -> None:
-        self.size = 2048, 2048
         self.screen = surface
+        self.ht = self.screen.get_height()
+        global TILE_W, TILE_H
+        TILE_W = TILE_H = self.ht // 8
+        self.size = TILE_W * 15, TILE_H * 15
+        keylist = list(TILES.keys())
+        for i in range(0, len(TILES)):
+            TILES[keylist[i]] = TILE_W*i, 0
+        print(TILES)
         self.walls = [6]
-        self.load_tileset(os.path.join("src/assets/maps", "tileset.bmp"))
+        self.load_tileset(os.path.join("assets/maps", "tileset.bmp"))
         self.generate()
 
     def reset(self) -> None:
@@ -55,11 +62,13 @@ class MapGenerator:
                 z = [x / self.tiles_x, y / self.tiles_y]
                 n = noise(z)
                 if n < 0.2:
+                    self.tiles[y][x] = 6
+                elif n < 0.3:
                     self.tiles[y][x] = 5
                 elif n < 0.4:
-                    self.tiles[y][x] = 6
-                elif n < 0.6:
                     self.tiles[y][x] = 4
+                elif n < 0.6:
+                    self.tiles[y][x] = 7
                 else:
                     self.tiles[y][x] = 2
         if DEBUG:
@@ -69,6 +78,8 @@ class MapGenerator:
 
     def load_tileset(self, image: str = "tileset.bmp") -> None:
         self.tileset = pygame.image.load(image)
+        self.tileset = pygame.transform.scale(self.tileset, (TILE_W*8, TILE_W*8))
+        print(self.tileset)
         self.rect = self.tileset.get_rect()
         return None
 
