@@ -1,4 +1,3 @@
-import os
 import random
 
 import pygame
@@ -37,19 +36,18 @@ class MapGenerator:
     def __init__(self, surface: pygame.surface.Surface) -> None:
         self.screen = surface
         self.ht = self.screen.get_height()
-        global TILE_W, TILE_H
-        TILE_W = TILE_H = self.ht // 8
-        self.size = TILE_W * 15, TILE_H * 15
+        self.TILE_W = self.TILE_H = self.ht // 8
+        self.size = self.TILE_W * 50, self.TILE_H * 50
         keylist = list(TILES.keys())
         for i in range(0, len(TILES)):
-            TILES[keylist[i]] = TILE_W*i, 0
+            TILES[keylist[i]] = self.TILE_W * i, 0
         print(TILES)
         self.walls = [6]
-        self.load_tileset(os.path.join("assets/maps", "tileset.bmp"))
+        self.load_tileset("src/assets/maps/tileset.bmp")
         self.generate()
 
     def reset(self) -> None:
-        self.tiles_x, self.tiles_y = self.size[0] // TILE_W, self.size[1] // TILE_H
+        self.tiles_x, self.tiles_y = self.size[0] // self.TILE_W, self.size[1] // self.TILE_H
         self.tiles = np.zeros((self.tiles_y, self.tiles_x), dtype=int)
         return None
 
@@ -78,7 +76,7 @@ class MapGenerator:
 
     def load_tileset(self, image: str = "tileset.bmp") -> None:
         self.tileset = pygame.image.load(image)
-        self.tileset = pygame.transform.scale(self.tileset, (TILE_W*8, TILE_W*8))
+        self.tileset = pygame.transform.scale(self.tileset, (self.TILE_W * 8, self.TILE_W * 8))
         print(self.tileset)
         self.rect = self.tileset.get_rect()
         return None
@@ -94,6 +92,6 @@ class MapGenerator:
                 coords = TILES[_type]
                 self.screen.blit(
                     self.tileset,
-                    (x * TILE_W - self.offset[0], y * TILE_H - self.offset[1]),
-                    Rect(coords[0], coords[1], TILE_W, TILE_H),
+                    (x * self.TILE_W - self.offset[0], y * self.TILE_H - self.offset[1]),
+                    Rect(coords[0], coords[1], self.TILE_W, self.TILE_H),
                 )

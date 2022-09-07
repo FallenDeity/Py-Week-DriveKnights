@@ -2,16 +2,17 @@ import os
 import pygame
 from src.sprites import MapGenerator
 from src.sprites import MainCharacter
-PATH: str = "assets/characters/mc/"
+
+PATH: str = "src/assets/characters/mc/"
 ALPHA: tuple[int, int, int] = (255, 255, 255)
 ANIMATIONS: dict[str, list[pygame.surface.Surface]] = {}
 ANIMATION: dict[str, list[pygame.surface.Surface]] = {}
 
 
-
 class Setup:
 
     mc: MainCharacter
+
     @staticmethod
     def get_mc_frames() -> dict[str, list[pygame.surface.Surface]]:
         for i in os.listdir(PATH):
