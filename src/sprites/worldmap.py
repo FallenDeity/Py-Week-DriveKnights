@@ -49,7 +49,7 @@ class MapGenerator:
     # Generate map using perlin noise
     def generate(self) -> None:
         self.reset()
-        noise = PerlinNoise(octaves=6, seed=random.randint(0, 100))
+        noise = PerlinNoise(octaves=7, seed=random.randint(0, 100))
         for y in range(self.tiles_y):
             for x in range(self.tiles_x):
                 z = [x / self.tiles_x, y / self.tiles_y]
